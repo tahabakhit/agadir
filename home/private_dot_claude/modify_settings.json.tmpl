@@ -1,0 +1,16 @@
+{{- $ops := list
+  (dict "op" "set" "path" (list "env" "DISABLE_TELEMETRY") "value" "1")
+  (dict "op" "set" "path" (list "env" "DISABLE_ERROR_REPORTING") "value" "1")
+  (dict "op" "set" "path" (list "env" "CLAUDE_CODE_ENABLE_TELEMETRY") "value" "0")
+  (dict "op" "set" "path" (list "attribution") "value" (dict "commit" "" "pr" ""))
+  (dict "op" "union" "path" (list "permissions" "deny") "value" (list
+    "Read(**/.env)" "Read(**/.env.*)" "Read(**/*.pem)" "Read(**/*.key)" "Read(**/.ssh/**)"
+    "Edit(**/.env)" "Edit(**/.env.*)" "Edit(**/*.pem)" "Edit(**/*.key)" "Edit(**/.ssh/**)"))
+-}}
+{{- if .vertexProject -}}
+{{-   $ops = concat $ops (list
+  (dict "op" "set" "path" (list "env" "CLAUDE_CODE_USE_VERTEX") "value" "1")
+  (dict "op" "set" "path" (list "env" "ANTHROPIC_VERTEX_PROJECT_ID") "value" .vertexProject)
+  (dict "op" "set" "path" (list "env" "CLOUD_ML_REGION") "value" .vertexLocation)) -}}
+{{- end -}}
+{{- template "merge-config" (dict "format" "json" "spec" $ops "root" .chezmoi.workingTree) -}}

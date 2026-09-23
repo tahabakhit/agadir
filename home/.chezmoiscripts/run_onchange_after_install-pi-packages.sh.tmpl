@@ -1,0 +1,36 @@
+{{- if ne .chezmoi.os "windows" -}}
+{{- $providers := includeTemplate "pi-providers.json" . | fromJson -}}
+{{- $all := concat .piPackages $providers -}}
+#!/bin/sh
+# Install Pi packages that settings.json declares but Pi has not installed yet.
+# Pi loads declared packages but never installs them on its own.
+# chezmoi reruns this when the list changes: {{ $all | toJson | sha256sum }}
+set -eu
+if ! command -v pi >/dev/null 2>&1; then
+	echo "agadir: pi is not on PATH; skipping Pi package installs" >&2
+	exit 0
+fi
+dir="$HOME/.pi/agent"
+for src in{{ range $all }} {{ . | quote }}{{ end }}; do
+	case "$src" in
+	npm:*)
+		name="${src#npm:}"
+		case "$name" in
+		@*/*@*) name="${name%@*}" ;;
+		@*) ;;
+		*@*) name="${name%@*}" ;;
+		esac
+		path="$dir/npm/node_modules/$name"
+		;;
+	git:*)
+		path="${src#git:}"
+		path="$dir/git/${path%@*}"
+		;;
+	*) continue ;;
+	esac
+	if [ ! -e "$path" ]; then
+		echo "agadir: installing $src"
+		npm_config_ignore_scripts=true pi install "$src"
+	fi
+done
+{{ end -}}

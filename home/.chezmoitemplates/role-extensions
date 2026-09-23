@@ -1,0 +1,3 @@
+{{- $providers := includeTemplate "pi-providers.json" .data | fromJson -}}
+{{- $all := concat .base $providers -}}
+{{- if $all }}{{ join ", " $all }}{{ else }}none{{ end -}}

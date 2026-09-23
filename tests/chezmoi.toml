@@ -1,0 +1,9 @@
+# Sample answers for the chezmoi prompts, used by CI and local checks.
+[data]
+name = "Example Person"
+email = "person@example.com"
+gitSigningKey = "~/.ssh/id_ed25519.pub"
+gitSigningProgram = ""
+vertexProject = "example-project"
+vertexLocation = "eu"
+weztermStartsHerdr = true

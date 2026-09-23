@@ -1,0 +1,53 @@
+onboarding = false
+
+# Herdr owns multiplexing inside the single outer WezTerm surface.
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[ui]
+sidebar_collapsed_mode = "compact"
+agent_panel_sort = "priority"
+window_title = "Herdr — {workspace} · {tab}"
+mouse_scroll_lines = 5
+status_indicators = "dots"
+
+# WezTerm turns Herdr's OSC 9 notifications into macOS notifications.
+[ui.toast]
+delivery = "terminal"
+delay_seconds = 1
+
+[terminal]
+# On macOS this starts login shells, preserving Homebrew and user PATH setup.
+shell_mode = "auto"
+new_cwd = "follow"
+kitty_graphics = true
+
+[advanced]
+scrollback_limit_bytes = 50000000
+
+[keys]
+# WezTerm intentionally has no Ctrl leader; this prefix belongs to Herdr.
+prefix = "ctrl+b"
+copy_mode = "prefix+["
+edit_scrollback = "prefix+e"
+
+# Available when the optional ray.plugin-manager plugin is installed.
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "ray.plugin-manager.open"
+description = "open plugin manager"
+
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "herdr-tsk.open-board"
+
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "herdr-tsk.quick-capture"
+
+[ui.sound]
+enabled = false

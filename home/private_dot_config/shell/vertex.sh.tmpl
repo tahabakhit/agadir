@@ -1,0 +1,14 @@
+# Claude on Google Vertex AI, for Claude Code, Pi and other Anthropic SDK clients.
+# Authentication comes from gcloud application-default credentials, not from here.
+export CLAUDE_CODE_USE_VERTEX=1
+export ANTHROPIC_VERTEX_PROJECT_ID={{ .vertexProject | quote }}
+export GOOGLE_CLOUD_PROJECT={{ .vertexProject | quote }}
+# Claude Code reads CLOUD_ML_REGION; Pi's Google providers read GOOGLE_CLOUD_LOCATION.
+export CLOUD_ML_REGION={{ .vertexLocation | quote }}
+export GOOGLE_CLOUD_LOCATION={{ .vertexLocation | quote }}
+export GOOGLE_VERTEX_LOCATION={{ .vertexLocation | quote }}
+{{- if has .vertexLocation (list "eu" "us") }}
+# Multi-region locations are served from aiplatform.<region>.rep.googleapis.com,
+# which the Anthropic Vertex SDK does not derive by itself.
+export ANTHROPIC_VERTEX_BASE_URL="https://aiplatform.{{ .vertexLocation }}.rep.googleapis.com/v1"
+{{- end }}

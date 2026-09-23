@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "git": {
+    "remote": "origin",
+    "base_branch": null,
+    "branch_prefix": "agent/pi"
+  },
+  "adapters": {
+    "github": {
+      "enabled": false,
+      "command": "gh"
+    },
+    "notes": {
+      "enabled": false
+    }
+  }
+}

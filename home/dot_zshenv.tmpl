@@ -1,0 +1,15 @@
+# Every zsh: interactive, login, scripts, and agents started from GUI apps.
+# Keep this to PATH and non-secret environment.
+
+[ -r "$HOME/.config/shell/path.sh" ] && . "$HOME/.config/shell/path.sh"
+typeset -U path PATH
+{{- if .vertexProject }}
+[ -r "$HOME/.config/shell/vertex.sh" ] && . "$HOME/.config/shell/vertex.sh"
+{{- end }}
+
+export TERMINAL=wezterm
+# Pi: longer provider prompt-cache retention, and keep searchable memory across /new, /resume and /fork.
+export PI_CACHE_RETENTION=long
+export PI_MEMORY_SUMMARIZE_TRANSITIONS=1
+
+[ -r "$HOME/.config/shell/local.zshenv" ] && . "$HOME/.config/shell/local.zshenv"

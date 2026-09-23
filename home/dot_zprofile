@@ -1,0 +1,8 @@
+# Login shells: Homebrew, then restore PATH order after macOS path_helper.
+
+if [ -x /opt/homebrew/bin/brew ]; then
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+[ -r "$HOME/.config/shell/path.sh" ] && . "$HOME/.config/shell/path.sh"
+
+[ -r "$HOME/.config/shell/local.zprofile" ] && . "$HOME/.config/shell/local.zprofile"

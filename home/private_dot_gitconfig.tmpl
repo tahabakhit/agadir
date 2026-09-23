@@ -1,0 +1,70 @@
+[user]
+	name = {{ .name }}
+	email = {{ .email }}
+{{- if .gitSigningKey }}
+	signingkey = {{ .gitSigningKey }}
+[gpg]
+	format = ssh
+{{- $signers := stat (joinPath .chezmoi.homeDir ".config/git/allowed_signers") }}
+{{- if or .gitSigningProgram $signers }}
+[gpg "ssh"]
+{{- if .gitSigningProgram }}
+	program = {{ .gitSigningProgram }}
+{{- end }}
+{{- if $signers }}
+	allowedSignersFile = ~/.config/git/allowed_signers
+{{- end }}
+{{- end }}
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+{{- end }}
+[init]
+	defaultBranch = main
+[core]
+	whitespace = space-before-tab,trailing-space
+	autocrlf = input
+[pull]
+	ff = only
+[fetch]
+	prune = true
+[push]
+	default = simple
+	autoSetupRemote = true
+[diff]
+	algorithm = histogram
+	renames = copies
+	colorMoved = default
+[rebase]
+	autoSquash = true
+[help]
+	autocorrect = prompt
+[alias]
+	s = status --short --branch
+	d = diff
+	b = branch
+	co = checkout
+	cob = checkout -b
+	l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset %C(yellow)%ae %Cgreen%cd%Creset %s'
+	undo = reset --soft HEAD~
+	unstage = restore --staged .
+	amend = commit --amend --no-edit
+	recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short)'
+	head = "!git symbolic-ref --short refs/remotes/origin/HEAD | sed 's@^origin/@@'"
+	cod = "!git checkout \"$(git head)\""
+	up = "!git fetch --prune origin && git rebase \"origin/${1:-$(git head)}\" #"
+	rb = "!git rebase --interactive \"${1:-$(git head)}\" #"
+	aliases = config --get-regexp '^alias\\.'
+{{- $gh := lookPath "gh" }}
+{{- if $gh }}
+[credential "https://github.com"]
+	helper =
+	helper = !{{ $gh }} auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !{{ $gh }} auth git-credential
+{{- end }}
+# Machine-specific settings (work identity, extra credential helpers, includeIf).
+[include]
+	path = ~/.config/git/local

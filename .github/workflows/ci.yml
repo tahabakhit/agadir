@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "26"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - run: brew install chezmoi
+      - run: npm test
+      - run: test -z "$(gofmt -l skills)" && go vet ./skills/github-workflows/scripts/git_hygiene_audit.go
+      - name: Render every chezmoi target with sample answers
+        run: |
+          tmp=$(mktemp -d)
+          HOME=$tmp chezmoi --source "$PWD" --destination "$tmp" --config tests/chezmoi.toml \
+            apply --exclude=scripts --verbose
+          HOME=$tmp chezmoi --source "$PWD" --destination "$tmp" --config tests/chezmoi.toml status --exclude=scripts
+          test -f "$tmp/.pi/agent/settings.json" && test -f "$tmp/.claude/CLAUDE.md" && test -f "$tmp/.gitconfig"
+      - name: Secret scan
+        run: |
+          brew install gitleaks
+          gitleaks detect --no-banner --redact

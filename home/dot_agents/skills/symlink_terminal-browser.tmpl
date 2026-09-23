@@ -1,0 +1,3 @@
+{{- /* terminal-browser ships its own agent skill; link it when the app is installed. */ -}}
+{{- $skill := joinPath .chezmoi.homeDir ".local/share/terminal-browser/app/skills/default/terminal-browser" -}}
+{{- if stat $skill }}{{ $skill }}{{ end }}

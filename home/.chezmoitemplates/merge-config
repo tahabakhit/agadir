@@ -1,0 +1,4 @@
+{{- /* Body of a modify_ script. Call with (dict "format" "json|toml" "spec" <ops> "root" .chezmoi.workingTree). */ -}}
+#!/bin/sh
+node_bin=$(command -v node || echo /opt/homebrew/bin/node)
+exec "$node_bin" {{ joinPath .root "tools/merge-config.ts" | quote }} {{ .format }} {{ .spec | toJson | b64enc }}

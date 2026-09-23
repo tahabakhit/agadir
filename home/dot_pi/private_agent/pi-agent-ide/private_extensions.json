@@ -1,0 +1,23 @@
+{
+  "preset": "text-editor",
+  "disabled": [
+    "ide.core",
+    "ide.tips",
+    "read.core",
+    "read.filesystem",
+    "read.filesystem.text",
+    "editor.core",
+    "editor.renderer",
+    "editor.anchor.constant",
+    "editor.anchor.line-hash",
+    "editor.anchor.exact",
+    "editor.stale-anchor",
+    "ide.ast"
+  ],
+  "enabled": [],
+  "flags": {
+    "pi-agent-ide-no-apply": true
+  },
+  "noAnimations": true,
+  "noPostProcessing": true
+}

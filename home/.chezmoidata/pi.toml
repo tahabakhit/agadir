@@ -1,0 +1,18 @@
+# Pi packages every machine gets. Provider packages are added per machine:
+# the Vertex one only when a Vertex project is configured.
+piPackages = [
+  "git:github.com/edxeth/pi-subagents",
+  "npm:@tahabakhit/pi-research-kit",
+  "npm:pi-agent-ide",
+  "npm:pi-blackhole",
+]
+piVertexPackage = "git:github.com/mandre/pi-anthropic-vertex@bump-pi"
+
+# Skills installed by other tools that Pi should not load twice or at all.
+piSkillExclusions = [
+  "!**/.agents/skills/tsk-cli/**",
+  "!**/last30days/**",
+]
+
+# Agent Skills shared by Pi, Codex (~/.agents/skills) and Claude Code (~/.claude/skills).
+portableSkills = ["github-workflows", "herdr", "macos-system-administration"]

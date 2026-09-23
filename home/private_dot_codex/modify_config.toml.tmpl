@@ -1,0 +1,2 @@
+{{- $spec := dict "personality" "pragmatic" "model_reasoning_summary" "concise" -}}
+{{- template "merge-config" (dict "format" "toml" "spec" $spec "root" .chezmoi.workingTree) -}}

@@ -1,0 +1,18 @@
+{{- if eq .chezmoi.os "windows" }}
+# Windows gets only the WezTerm config.
+.agents
+.claude
+.codex
+.config/git
+.config/herdr
+.config/shell
+.config/wezterm/start-herdr
+.gitconfig
+.pi
+.zprofile
+.zshenv
+.zshrc
+{{- end }}
+{{- if not .vertexProject }}
+.config/shell/vertex.sh
+{{- end }}
