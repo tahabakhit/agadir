@@ -1,8 +1,8 @@
+{{- /* Adds and updates agadir's packages and skill exclusions; entries you add yourself stay. */ -}}
 {{- $providers := includeTemplate "pi-providers.json" . | fromJson -}}
 {{- $self := dict "source" .chezmoi.workingTree "skills" (list "pi/skills/*") -}}
 {{- $ops := list
-  (dict "op" "set" "path" (list "packages") "value" (concat .piPackages $providers (list $self)))
-  (dict "op" "set" "path" (list "extensions") "value" (list))
-  (dict "op" "set" "path" (list "skills") "value" .piSkillExclusions)
+  (dict "op" "upsert" "path" (list "packages") "value" (concat .piPackages $providers (list $self)))
+  (dict "op" "union" "path" (list "skills") "value" .piSkillExclusions)
 -}}
 {{- template "merge-config" (dict "format" "json" "spec" $ops "root" .chezmoi.workingTree) -}}

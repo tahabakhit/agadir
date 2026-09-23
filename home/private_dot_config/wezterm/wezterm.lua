@@ -75,7 +75,7 @@ config.ssh_domains = {}
 -- local.lua returns a function that receives the config and a table of helpers:
 --   return function(config, h)
 --     h.use_herdr()                        -- Herdr in every new window, native tabs off
---     h.ssh('mini', 'taha@mac-mini.local') -- adds an SSH domain and a launcher entry
+--     h.ssh('mini', 'user@host.local') -- adds an SSH domain and a launcher entry
 --   end
 local helpers = {
   use_herdr = function()

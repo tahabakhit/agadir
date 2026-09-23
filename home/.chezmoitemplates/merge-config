@@ -1,4 +1,9 @@
 {{- /* Body of a modify_ script. Call with (dict "format" "json|toml" "spec" <ops> "root" .chezmoi.workingTree). */ -}}
 #!/bin/sh
+# Needs Node with built-in TypeScript support (22.18 or later); the file is left untouched otherwise.
 node_bin=$(command -v node || echo /opt/homebrew/bin/node)
+if ! "$node_bin" -e 'process.exit(process.features.typescript ? 0 : 1)' 2>/dev/null; then
+	echo "agadir: merging this settings file needs Node 22.18 or later on PATH" >&2
+	exit 1
+fi
 exec "$node_bin" {{ joinPath .root "tools/merge-config.ts" | quote }} {{ .format }} {{ .spec | toJson | b64enc }}

@@ -1,3 +1,4 @@
+{{- /* Call with (dict "ctx" . "harness" "pi|claude|codex"). Appends ~/.config/agadir/instructions.local.md and instructions.<harness>.md when present. */ -}}
 # Global instructions
 
 These apply in every repository. Repository `AGENTS.md` files add to them and
@@ -67,8 +68,10 @@ When unsure whether a comment is needed, it isn't.
 - `rg` for searching text and files.
 - For an interactive browser, use `terminal-browser` (see its skill). Never open
   the host's graphical browser unless asked.
-{{- $local := joinPath .chezmoi.homeDir ".config/agadir/instructions.local.md" }}
-{{- if stat $local }}
+{{- range $name := list "instructions.local.md" (printf "instructions.%s.md" .harness) }}
+{{- $path := joinPath $.ctx.chezmoi.homeDir ".config/agadir" $name }}
+{{- if stat $path }}
 
-{{ include $local | trim }}
+{{ include $path | trim }}
+{{- end }}
 {{- end }}

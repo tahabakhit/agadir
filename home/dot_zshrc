@@ -16,7 +16,8 @@ autoload -Uz compinit
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
-command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
+# fzf 0.48 and later print their own zsh integration.
+command -v fzf >/dev/null 2>&1 && fzf --zsh >/dev/null 2>&1 && source <(fzf --zsh)
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 if command -v starship >/dev/null 2>&1 && [[ $TERM != dumb ]]; then
 	eval "$(starship init zsh)"

@@ -77,7 +77,7 @@ read if present:
 |---|---|
 | `~/.config/shell/local.zshenv`, `local.zprofile`, `local.zsh` | Machine-specific shell setup (work tools, secrets loaders, extra PATH) |
 | `~/.config/git/local` | Work identity, extra credential helpers, `includeIf` rules |
-| `~/.config/agadir/instructions.local.md` | Appended to the global agent instructions: who you are, internal tool routing |
+| `~/.config/agadir/instructions.local.md`, `instructions.<pi\|claude\|codex>.md` | Appended to the global agent instructions (all harnesses, or one): who you are, internal tool routing |
 | `~/.config/agadir/snippets/*.md` | Your own prompt snippets (same name overrides a bundled one) |
 | `~/.config/agadir/session-lifecycle.json` | Adapters for the `session` skill |
 | `~/.config/wezterm/local.lua` | WezTerm per machine: start Herdr, SSH hosts (created once, never overwritten) |

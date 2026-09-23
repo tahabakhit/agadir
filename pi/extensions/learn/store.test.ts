@@ -64,3 +64,31 @@ test("log appends dated markdown entries", async () => {
 	assert.match(text, /^## 2026-01-01 Go channels\n\n\*\*Learned:\*\* Unbuffered sends block\n\n\*\*Misconceptions:\*\* close wakes senders\n\n## 2026-01-02 Go select/);
 	assert.match(text, /\*\*Next:\*\* Timeouts\n\n$/);
 });
+
+test("withReviewLock serializes concurrent updates across callers", async () => {
+	const { withReviewLock } = await import("./store.ts");
+	const dir = await tempDir();
+	await saveReviews(dir, { version: 1, items: [] });
+	const now = new Date("2026-01-01T00:00:00Z");
+	await Promise.all(
+		Array.from({ length: 5 }, (_, i) =>
+			withReviewLock(dir, async () => {
+				const data = await loadReviews(dir);
+				await new Promise((resolve) => setTimeout(resolve, 5));
+				addItem(data, { topic: "t", prompt: `p${i}`, answer: "a" }, now);
+				await saveReviews(dir, data);
+			}),
+		),
+	);
+	assert.equal((await loadReviews(dir)).items.length, 5);
+});
+
+test("withReviewLock removes a stale lock", async () => {
+	const { withReviewLock } = await import("./store.ts");
+	const dir = await tempDir();
+	const { mkdir: mk, utimes } = await import("node:fs/promises");
+	await mk(join(dir, "reviews.lock"));
+	const old = new Date(Date.now() - 60_000);
+	await utimes(join(dir, "reviews.lock"), old, old);
+	assert.equal(await withReviewLock(dir, async () => "ran"), "ran");
+});

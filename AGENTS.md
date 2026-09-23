@@ -26,7 +26,8 @@ and a chezmoi source (`home/`, selected by `.chezmoiroot`).
 ```sh
 npm test
 tmp=$(mktemp -d) && HOME=$tmp chezmoi --source "$PWD" --destination "$tmp" \
-  --config tests/chezmoi.toml apply --dry-run --exclude=scripts --verbose
+  --config tests/chezmoi.toml --persistent-state "$tmp/state.boltdb" \
+  apply --exclude=scripts --verbose
 ```
 
 `tests/chezmoi.toml` holds sample answers for the chezmoi prompts. For changes

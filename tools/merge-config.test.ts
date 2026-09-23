@@ -61,3 +61,11 @@ test("cli reads stdin and writes the merge", () => {
 	assert.equal(result.status, 0, result.stderr);
 	assert.deepEqual(JSON.parse(result.stdout), { a: 2, b: 0 });
 });
+
+test("json upsert matches packages by source and keeps user additions", () => {
+	const input = JSON.stringify({ packages: ["npm:mine", "npm:a", { source: "/repo", skills: ["old/*"] }] });
+	const out = JSON.parse(
+		mergeJson(input, [{ op: "upsert", path: ["packages"], value: ["npm:a", "npm:b", { source: "/repo", skills: ["pi/skills/*"] }] }]),
+	);
+	assert.deepEqual(out.packages, ["npm:mine", "npm:a", { source: "/repo", skills: ["pi/skills/*"] }, "npm:b"]);
+});

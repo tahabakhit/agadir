@@ -8,7 +8,7 @@ import { MODE_ENTRY, parseModeArg, resolveMode, savedMode, toolsFor } from "./mo
 import { prepareQuiz, type QuestionResult, type QuestionType, summarizeQuiz } from "./quiz.ts";
 import { runQuiz } from "./quiz-ui.ts";
 import type { Outcome } from "./schedule.ts";
-import { addItem, appendLog, dueItems, gradeItem, learnDir, listItems, loadReviews, type ReviewItem, reviewsPath, saveReviews } from "./store.ts";
+import { addItem, appendLog, dueItems, gradeItem, learnDir, listItems, loadReviews, type ReviewItem, reviewsPath, saveReviews, withReviewLock } from "./store.ts";
 
 const GUIDANCE = `Learn mode is on. The user wants to build their own skill in the topic at hand, not only get output.
 
@@ -231,7 +231,7 @@ export default function learn(pi: ExtensionAPI) {
 				const path = await appendLog(root, { topic: need(p.topic, "topic", "log"), learned: need(p.learned, "learned", "log"), misconceptions: p.misconceptions, next: p.next }, now);
 				return done(`Logged to ${path}.`);
 			}
-			return withFileMutationQueue(reviewsPath(root), async () => {
+			return withFileMutationQueue(reviewsPath(root), () => withReviewLock(root, async () => {
 				const data = await loadReviews(root);
 				if (p.action === "add") {
 					const item = addItem(data, { topic: need(p.topic, "topic", "add"), prompt: need(p.prompt, "prompt", "add"), answer: need(p.answer, "answer", "add"), misconception: p.misconception }, now);
@@ -257,7 +257,7 @@ export default function learn(pi: ExtensionAPI) {
 				if (!items.length) return done(p.topic ? `No items match "${p.topic}".` : "The review queue is empty.");
 				const summary = `${items.length} item(s).`;
 				return done(summary, items, [summary, ...items.map((i) => `${i.id} [${i.topic}] due ${day(i.due)}: ${i.prompt}`)].join("\n"));
-			});
+			}));
 		},
 		renderCall(args, theme) {
 			const extra = [args.topic, args.id, args.outcome].filter(Boolean).join(" ");

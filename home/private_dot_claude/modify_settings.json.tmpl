@@ -12,5 +12,10 @@
   (dict "op" "set" "path" (list "env" "CLAUDE_CODE_USE_VERTEX") "value" "1")
   (dict "op" "set" "path" (list "env" "ANTHROPIC_VERTEX_PROJECT_ID") "value" .vertexProject)
   (dict "op" "set" "path" (list "env" "CLOUD_ML_REGION") "value" .vertexLocation)) -}}
+{{- else -}}
+{{-   $ops = concat $ops (list
+  (dict "op" "unset" "path" (list "env" "CLAUDE_CODE_USE_VERTEX"))
+  (dict "op" "unset" "path" (list "env" "ANTHROPIC_VERTEX_PROJECT_ID"))
+  (dict "op" "unset" "path" (list "env" "CLOUD_ML_REGION"))) -}}
 {{- end -}}
 {{- template "merge-config" (dict "format" "json" "spec" $ops "root" .chezmoi.workingTree) -}}

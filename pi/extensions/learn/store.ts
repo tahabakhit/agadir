@@ -1,7 +1,7 @@
 // Review queue and learning log, stored outside any session.
 
 import { randomBytes } from "node:crypto";
-import { appendFile, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, rename, rmdir, stat, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { firstSchedule, isDue, nextSchedule, type Outcome } from "./schedule.ts";
@@ -51,6 +51,37 @@ export async function loadReviews(dir: string): Promise<ReviewData> {
 		throw new Error(`${file} has no "items" array. Fix or move it; it was left untouched.`);
 	}
 	return data as ReviewData;
+}
+
+/**
+ * Run `fn` while holding a lock directory next to the queue, so two Pi processes
+ * grading at the same time cannot overwrite each other's changes. A lock older
+ * than `staleMs` is treated as left behind by a crashed process and removed.
+ */
+export async function withReviewLock<T>(dir: string, fn: () => Promise<T>, staleMs = 30_000, waitMs = 5_000): Promise<T> {
+	await mkdir(dir, { recursive: true });
+	const lock = join(dir, "reviews.lock");
+	const deadline = Date.now() + waitMs;
+	for (;;) {
+		try {
+			await mkdir(lock);
+			break;
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+			const age = await stat(lock).then((s) => Date.now() - s.mtimeMs, () => 0);
+			if (age > staleMs) {
+				await rmdir(lock).catch(() => {});
+				continue;
+			}
+			if (Date.now() > deadline) throw new Error(`${lock} is held by another Pi session; try again.`);
+			await new Promise((resolve) => setTimeout(resolve, 50));
+		}
+	}
+	try {
+		return await fn();
+	} finally {
+		await rmdir(lock).catch(() => {});
+	}
 }
 
 /** Write via a temp file and rename so a crash never leaves a half-written queue. */
