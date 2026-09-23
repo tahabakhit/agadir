@@ -7,7 +7,7 @@ description: Read-only reports over past Pi session transcripts. Use when the us
 
 Four Node scripts in `scripts/` read Pi's JSONL session files. They need no install or build (`node scripts/<name>.ts`), and they never write anything.
 
-Default roots are `$PI_CODING_AGENT_SESSION_DIR` or `~/.pi/agent/sessions`, plus `~/.pi/learn/sessions` when it exists. Add roots with `--root DIR`; use `--no-default-roots` to scan only those. Malformed lines are skipped and counted in a `warning:` on stderr.
+The default root is `$PI_CODING_AGENT_SESSION_DIR` or `~/.pi/agent/sessions`. Add roots with `--root DIR`; use `--no-default-roots` to scan only those. Malformed lines are skipped and counted in a `warning:` on stderr.
 
 | Script | Answers | Subagents by default |
 |---|---|---|

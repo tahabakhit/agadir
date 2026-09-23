@@ -1,7 +1,7 @@
 -- Machine-specific WezTerm settings. Created once by chezmoi and never
 -- overwritten; edit freely. See wezterm.lua for the helpers.
 return function(config, h)
-{{- if .weztermStartsHerdr }}
+{{- if and .weztermStartsHerdr (ne .chezmoi.os "windows") }}
   h.use_herdr()
 {{- end }}
 end

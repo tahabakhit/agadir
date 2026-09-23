@@ -33,3 +33,38 @@ jobs:
         run: |
           brew install gitleaks
           gitleaks detect --no-banner --redact
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi and WezTerm
+        shell: pwsh
+        run: choco install chezmoi wezterm -y --no-progress
+      - name: Apply on Windows and load the WezTerm config
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dest = Join-Path $env:RUNNER_TEMP 'home'
+          New-Item -ItemType Directory -Force $dest | Out-Null
+
+          # No answers are needed on Windows: the config template asks nothing.
+          $config = chezmoi --source $PWD execute-template --init --no-tty --file home/.chezmoi.toml.tmpl
+          $config
+          if ($LASTEXITCODE -ne 0) { throw 'config template failed' }
+          $configFile = Join-Path $env:RUNNER_TEMP 'chezmoi.toml'
+          Set-Content -Path $configFile -Value $config
+
+          chezmoi --source $PWD --destination $dest --config $configFile --persistent-state (Join-Path $env:RUNNER_TEMP 'state.boltdb') apply --verbose
+          if ($LASTEXITCODE -ne 0) { throw 'chezmoi apply failed' }
+
+          $files = Get-ChildItem -Recurse -File $dest | ForEach-Object { $_.FullName.Substring($dest.Length + 1) } | Sort-Object
+          $files
+          $expected = @('.config\wezterm\local.lua', '.config\wezterm\wezterm.lua')
+          if (Compare-Object $files $expected) { throw 'Windows should get only the WezTerm config' }
+
+          $wezterm = (Get-Command wezterm.exe -ErrorAction SilentlyContinue).Source
+          if (-not $wezterm) { $wezterm = 'C:\Program Files\WezTerm\wezterm.exe' }
+          $keys = & $wezterm --config-file (Join-Path $dest '.config\wezterm\wezterm.lua') show-keys 2>&1 | Out-String
+          if ($LASTEXITCODE -ne 0 -or $keys -notmatch 'ShowLauncher' -or $keys -match 'ERROR') { $keys; throw 'WezTerm could not load the config' }
+          'WezTerm loaded the config'

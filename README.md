@@ -55,7 +55,19 @@ chezmoi apply
 ```
 
 `chezmoi init` asks each question once and keeps the answers in
-`~/.config/chezmoi/chezmoi.toml`. On Windows only the WezTerm config is applied.
+`~/.config/chezmoi/chezmoi.toml`.
+
+On Windows, only the WezTerm config is applied and nothing is asked:
+
+```powershell
+winget install twpayne.chezmoi   # or: choco install chezmoi
+chezmoi init --apply tahabakhit/agadir
+```
+
+It lands in `%USERPROFILE%\.config\wezterm\`, which WezTerm reads before
+`%USERPROFILE%\.wezterm.lua`. New windows open PowerShell 7 if it is installed,
+otherwise Windows PowerShell. CI applies it on a Windows runner and loads it in
+WezTerm.
 
 To work on the repository itself, clone it anywhere and point chezmoi at it:
 

@@ -109,10 +109,7 @@ export function textOf(content: unknown, types: string[] = ["text"]): string {
 // Roots and discovery
 
 export function defaultRoots(): string[] {
-	const roots = [process.env.PI_CODING_AGENT_SESSION_DIR || join(homedir(), ".pi", "agent", "sessions")];
-	const learn = join(homedir(), ".pi", "learn", "sessions");
-	if (existsSync(learn)) roots.push(learn);
-	return roots;
+	return [process.env.PI_CODING_AGENT_SESSION_DIR || join(homedir(), ".pi", "agent", "sessions")];
 }
 
 export interface DiscoveredFile {
@@ -416,8 +413,8 @@ export const commonHelp = `Filters (shared):
   --grep S                user prompts contain S (case-insensitive)
 Roots:
   --root DIR              extra session root (repeatable)
-  --no-default-roots      scan only --root dirs (defaults: $PI_CODING_AGENT_SESSION_DIR or
-                          ~/.pi/agent/sessions, plus ~/.pi/learn/sessions if present)`;
+  --no-default-roots      scan only --root dirs (default: $PI_CODING_AGENT_SESSION_DIR or
+                          ~/.pi/agent/sessions)`;
 
 export function parseCli<T extends ParseArgsConfig["options"]>(argv: string[], extra: T, allowPositionals = false) {
 	return parseArgs({

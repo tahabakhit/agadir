@@ -1,14 +1,18 @@
 {{- /* Answers are stored in ~/.config/chezmoi/chezmoi.toml and asked only once. */ -}}
-{{- $name := promptStringOnce . "name" "Your name (git user.name)" -}}
-{{- $email := promptStringOnce . "email" "Your email (git user.email)" -}}
-{{- $signingKey := promptStringOnce . "gitSigningKey" "SSH signing key: a key file path or a public key (empty for no signing)" "" -}}
-{{- $signingProgram := promptStringOnce . "gitSigningProgram" "SSH signing program, e.g. 1Password's op-ssh-sign (empty for ssh-keygen)" "" -}}
-{{- $vertexProject := promptStringOnce . "vertexProject" "Google Cloud project for Claude on Vertex AI (empty to skip)" "" -}}
-{{- $vertexLocation := "" -}}
-{{- if $vertexProject -}}
-{{-   $vertexLocation = promptStringOnce . "vertexLocation" "Vertex AI location (e.g. eu, us, europe-west1)" "eu" -}}
+{{- $name := "" -}}{{- $email := "" -}}{{- $signingKey := "" -}}{{- $signingProgram := "" -}}
+{{- $vertexProject := "" -}}{{- $vertexLocation := "" -}}{{- $weztermHerdr := false -}}
+{{- /* Windows gets only the WezTerm config, so it needs no answers. */ -}}
+{{- if ne .chezmoi.os "windows" -}}
+{{-   $name = promptStringOnce . "name" "Your name (git user.name)" -}}
+{{-   $email = promptStringOnce . "email" "Your email (git user.email)" -}}
+{{-   $signingKey = promptStringOnce . "gitSigningKey" "SSH signing key: a key file path or a public key (empty for no signing)" "" -}}
+{{-   $signingProgram = promptStringOnce . "gitSigningProgram" "SSH signing program, e.g. 1Password's op-ssh-sign (empty for ssh-keygen)" "" -}}
+{{-   $vertexProject = promptStringOnce . "vertexProject" "Google Cloud project for Claude on Vertex AI (empty to skip)" "" -}}
+{{-   if $vertexProject -}}
+{{-     $vertexLocation = promptStringOnce . "vertexLocation" "Vertex AI location (e.g. eu, us, europe-west1)" "eu" -}}
+{{-   end -}}
+{{-   $weztermHerdr = promptBoolOnce . "weztermStartsHerdr" "Should WezTerm open Herdr in every new window" false -}}
 {{- end -}}
-{{- $weztermHerdr := promptBoolOnce . "weztermStartsHerdr" "Should WezTerm open Herdr in every new window" false -}}
 
 sourceDir = {{ .chezmoi.workingTree | quote }}
 

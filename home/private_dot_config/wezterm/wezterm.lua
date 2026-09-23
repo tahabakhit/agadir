@@ -10,7 +10,16 @@ local is_windows = wezterm.target_triple:find('windows') ~= nil
 local is_mac = wezterm.target_triple:find('darwin') ~= nil
 
 local start_herdr = wezterm.home_dir .. '/.config/wezterm/start-herdr'
-local login_shell = is_windows and { 'pwsh.exe', '-NoLogo' } or { '/bin/zsh', '-l' }
+-- On Windows, prefer PowerShell 7 when it is installed, else the built-in Windows PowerShell.
+local function windows_shell()
+  for dir in (os.getenv('PATH') or ''):gmatch('[^;]+') do
+    if #wezterm.glob(dir .. '\\pwsh.exe') > 0 then
+      return { 'pwsh.exe', '-NoLogo' }
+    end
+  end
+  return { 'powershell.exe', '-NoLogo' }
+end
+local login_shell = is_windows and windows_shell() or { '/bin/zsh', '-l' }
 
 config.default_prog = login_shell
 config.term = 'xterm-256color'
@@ -79,6 +88,10 @@ config.ssh_domains = {}
 --   end
 local helpers = {
   use_herdr = function()
+    if is_windows then
+      wezterm.log_warn('use_herdr() is ignored on Windows; Herdr runs on the Macs')
+      return
+    end
     config.default_prog = { start_herdr }
     config.enable_tab_bar = false
     table.insert(config.keys, { key = 't', mods = 'CMD', action = act.DisableDefaultAssignment })
