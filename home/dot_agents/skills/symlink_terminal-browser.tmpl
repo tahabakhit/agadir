@@ -1,3 +1,5 @@
-{{- /* terminal-browser ships its own agent skill; link it when the app is installed. */ -}}
-{{- $skill := joinPath .chezmoi.homeDir ".local/share/terminal-browser/app/skills/default/terminal-browser" -}}
-{{- if stat $skill }}{{ $skill }}{{ end }}
+{{- /* terminal-browser ships its own agent skill; link it when the app is installed (script or Homebrew cask install). */ -}}
+{{- $roots := concat (list (joinPath .chezmoi.homeDir ".local/share/terminal-browser/app")) (glob "/opt/homebrew/Caskroom/terminal-browser/*/terminal-browser") -}}
+{{- $found := "" -}}
+{{- range $roots }}{{ $skill := joinPath . "skills/default/terminal-browser" }}{{ if stat $skill }}{{ $found = $skill }}{{ end }}{{ end -}}
+{{ $found }}
