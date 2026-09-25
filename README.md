@@ -111,6 +111,12 @@ including key order. A file that already has these values is left untouched.
 Pi does not install packages that settings declare, so `chezmoi apply` runs
 `pi install` for any that are missing.
 
+When Herdr is installed, `chezmoi apply` also installs the
+[herdr-projects](https://github.com/eliasstravik/herdr-projects) plugin if it is
+missing and runs its `configure`, which adds its progress hooks to Claude Code
+and Codex. Once the plugin is present, Herdr's `config.toml` gets its sidebar
+rows, the `prefix+y` popup key and the tab-bar entry.
+
 ## Tests
 
 ```sh

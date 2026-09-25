@@ -1,3 +1,6 @@
+{{- /* The herdr-projects blocks must match what `herdr-projects configure` writes, byte for byte, or the two keep rewriting this file. They appear once the plugin is installed. */ -}}
+{{- $hp := "" -}}
+{{- range glob (joinPath .chezmoi.homeDir ".config/herdr/plugins/github/herdr-projects-*/target/release/herdr-projects") }}{{ $hp = . }}{{ end -}}
 onboarding = false
 
 # Herdr owns multiplexing inside the single outer WezTerm surface.
@@ -11,6 +14,9 @@ agent_panel_sort = "priority"
 window_title = "Herdr — {workspace} · {tab}"
 mouse_scroll_lines = 5
 status_indicators = "dots"
+{{- if $hp }}
+tab_bar_right = [{ type = "command", command = "{{ $hp }} --root {{ joinPath .chezmoi.homeDir ".herdr-projects" }} needs-you --line", interval_seconds = 15, timeout_seconds = 5 }]
+{{- end }}
 
 # WezTerm turns Herdr's OSC 9 notifications into macOS notifications.
 [ui.toast]
@@ -48,6 +54,22 @@ command = "herdr-tsk.open-board"
 key = "prefix+a"
 type = "plugin_action"
 command = "herdr-tsk.quick-capture"
+{{- if $hp }}
+
+[[keys.command]]
+key = "prefix+y"
+type = "plugin_action"
+command = "herdr-projects.open-popup"
+description = "Projects"
+{{- end }}
 
 [ui.sound]
 enabled = false
+{{- if $hp }}
+
+[ui.sidebar.agents]
+rows = [["state_icon", "machine", "workspace", "tab"], ["agent"], [{ token = "$hp_state", rules = [{ starts_with = "needs you", fg = "#f38ba8", bold = true }, { starts_with = "review", fg = "#f9e2af" }] }], [{ token = "$hp_activity", dim = true }]]
+
+[ui.sidebar.spaces]
+rows = [["state_icon", "workspace"], ["branch", "git_status"], [{ token = "$hp" }]]
+{{- end }}

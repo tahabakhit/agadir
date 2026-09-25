@@ -1,0 +1,28 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# Install herdr-projects if it is missing, then let it add its agent hooks and
+# skill links. The plugin upgrades itself with `herdr-projects update`, so the
+# pinned ref only applies to new installs.
+set -eu
+ref=v0.2.13
+if ! command -v herdr >/dev/null 2>&1; then
+	echo "agadir: herdr is not on PATH; skipping herdr-projects" >&2
+	exit 0
+fi
+find_bin() {
+	for bin in "$HOME"/.config/herdr/plugins/github/herdr-projects-*/target/release/herdr-projects; do
+		if [ -x "$bin" ]; then
+			echo "$bin"
+			return 0
+		fi
+	done
+	return 1
+}
+if ! bin=$(find_bin); then
+	echo "agadir: installing herdr-projects $ref"
+	herdr plugin install --yes --ref "$ref" eliasstravik/herdr-projects
+	bin=$(find_bin)
+fi
+# prefix+a is taken by herdr-tsk's quick capture in Herdr's config.toml.
+"$bin" configure --key prefix+y
+{{ end -}}
