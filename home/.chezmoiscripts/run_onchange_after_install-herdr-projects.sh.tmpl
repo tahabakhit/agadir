@@ -20,7 +20,8 @@ find_bin() {
 }
 if ! bin=$(find_bin); then
 	echo "agadir: installing herdr-projects $ref"
-	herdr plugin install --yes --ref "$ref" eliasstravik/herdr-projects
+	# Herdr reads the repository only as the first argument, whatever --help shows.
+	herdr plugin install eliasstravik/herdr-projects --ref "$ref" --yes
 	bin=$(find_bin)
 fi
 # prefix+a is taken by herdr-tsk's quick capture in Herdr's config.toml.
