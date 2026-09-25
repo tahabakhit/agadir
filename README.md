@@ -5,8 +5,7 @@ My agent and shell setup in one repository:
 - **A Pi package**: extensions, skills, prompts and a learn mode for the
   [Pi coding agent](https://pi.dev).
 - **Dotfiles managed by [chezmoi](https://chezmoi.io)**: zsh, git, Herdr,
-  WezTerm, and the configuration for Pi, Claude Code and Codex, including one set
-  of global agent instructions shared by all three.
+  WezTerm, and the configuration for Pi, Claude Code and Codex.
 
 Take the whole thing or just the parts you want.
 
@@ -21,7 +20,7 @@ Take the whole thing or just the parts you want.
 | `pi/skills/` | Pi-specific skills: `analyze-sessions` (cost and transcript search), `session` (tracked sessions with Git attribution), `web-debug` (frontend debugging with terminal-browser). |
 | `pi/prompts/` | `/handoff`, `/session-start`, `/session-close`. |
 | `skills/` | Agent Skills that work in any harness: `github-workflows`, `herdr`, `macos-system-administration`. |
-| `home/` | The chezmoi source: shell, git, Herdr, WezTerm, Pi, Claude Code and Codex configuration, subagent roles, global instructions. |
+| `home/` | The chezmoi source: shell, git, Herdr, WezTerm, Pi, Claude Code and Codex configuration, subagent roles. |
 | `tools/merge-config.ts` | Merges owned keys into config files that their apps also write. |
 
 ## Use the Pi package
@@ -89,7 +88,7 @@ read if present:
 |---|---|
 | `~/.config/shell/local.zshenv`, `local.zprofile`, `local.zsh` | Machine-specific shell setup (work tools, secrets loaders, extra PATH) |
 | `~/.config/git/local` | Work identity, extra credential helpers, `includeIf` rules |
-| `~/.config/agadir/instructions.local.md`, `instructions.<pi\|claude\|codex>.md` | Appended to the global agent instructions (all harnesses, or one): who you are, internal tool routing |
+| `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.pi/agent/AGENTS.md` | Global agent instructions; chezmoi does not manage them |
 | `~/.config/agadir/snippets/*.md` | Your own prompt snippets (same name overrides a bundled one) |
 | `~/.config/agadir/session-lifecycle.json` | Adapters for the `session` skill |
 | `~/.config/wezterm/local.lua` | WezTerm per machine: start Herdr, SSH hosts (created once, never overwritten) |

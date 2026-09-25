@@ -3,7 +3,7 @@
 | Path | Source | License |
 |---|---|---|
 | `pi/prompts/handoff.md` | Adapted from the `handoff` skill in [davidondrej/skills](https://github.com/davidondrej/skills) | MIT, Copyright (c) 2026 David Ondrej ([text](licenses/davidondrej-skills.txt)) |
-| "Writing that lands in a repository" in `home/.chezmoitemplates/agent-instructions.md`, and some git aliases, shell aliases and history settings | Adapted from [lararosekelley/dotfiles](https://github.com/lararosekelley/dotfiles) | MIT, Copyright (c) 2014-2026 Lara Kelley ([text](licenses/lararosekelley-dotfiles.txt)) |
+| Some git aliases, shell aliases and history settings | Adapted from [lararosekelley/dotfiles](https://github.com/lararosekelley/dotfiles) | MIT, Copyright (c) 2014-2026 Lara Kelley ([text](licenses/lararosekelley-dotfiles.txt)) |
 
 Everything else is original to this repository and covered by `LICENSE`.
 

@@ -28,7 +28,7 @@ jobs:
           cz() { HOME=$tmp chezmoi --source "$PWD" --destination "$tmp" --config tests/chezmoi.toml --persistent-state "$tmp/state.boltdb" "$@"; }
           cz apply --exclude=scripts --verbose
           test -z "$(cz status --exclude=scripts)"
-          test -f "$tmp/.pi/agent/settings.json" && test -f "$tmp/.claude/CLAUDE.md" && test -f "$tmp/.gitconfig"
+          test -f "$tmp/.pi/agent/settings.json" && test -f "$tmp/.claude/settings.json" && test -f "$tmp/.gitconfig"
       - name: Secret scan
         run: |
           brew install gitleaks
