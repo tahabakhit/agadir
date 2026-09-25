@@ -1,6 +1,10 @@
-{{- /* The herdr-projects blocks must match what `herdr-projects configure` writes, byte for byte, or the two keep rewriting this file. They appear once the plugin is installed. */ -}}
-{{- $hp := "" -}}
-{{- range glob (joinPath .chezmoi.homeDir ".config/herdr/plugins/github/herdr-projects-*/target/release/herdr-projects") }}{{ $hp = . }}{{ end -}}
+{{- /* chezmoi:modify-template */ -}}
+{{- /* herdr-projects' configure owns its tab-bar entry, popup key and sidebar rows. They are carried over from the current file, so plugin updates and chezmoi never undo each other. */ -}}
+{{- $current := .chezmoi.stdin -}}
+{{- $tab := regexFind `(?m)^tab_bar_right = .*herdr-projects.*$` $current -}}
+{{- $popup := regexFind `(?m)^\[\[keys\.command\]\]\n(?:[a-z_]+ = .*\n)*?command = "herdr-projects\.open-popup"(?:\n[a-z_]+ = .*)*` $current -}}
+{{- $agents := regexFind `(?m)^\[ui\.sidebar\.agents\]\nrows = .*$` $current -}}
+{{- $spaces := regexFind `(?m)^\[ui\.sidebar\.spaces\]\nrows = .*$` $current -}}
 onboarding = false
 
 # Herdr owns multiplexing inside the single outer WezTerm surface.
@@ -14,8 +18,8 @@ agent_panel_sort = "priority"
 window_title = "Herdr — {workspace} · {tab}"
 mouse_scroll_lines = 5
 status_indicators = "dots"
-{{- if $hp }}
-tab_bar_right = [{ type = "command", command = "{{ $hp }} --root {{ joinPath .chezmoi.homeDir ".herdr-projects" }} needs-you --line", interval_seconds = 15, timeout_seconds = 5 }]
+{{- with $tab }}
+{{ . }}
 {{- end }}
 
 # WezTerm turns Herdr's OSC 9 notifications into macOS notifications.
@@ -54,22 +58,18 @@ command = "herdr-tsk.open-board"
 key = "prefix+a"
 type = "plugin_action"
 command = "herdr-tsk.quick-capture"
-{{- if $hp }}
+{{- with $popup }}
 
-[[keys.command]]
-key = "prefix+y"
-type = "plugin_action"
-command = "herdr-projects.open-popup"
-description = "Projects"
+{{ . }}
 {{- end }}
 
 [ui.sound]
 enabled = false
-{{- if $hp }}
+{{- with $agents }}
 
-[ui.sidebar.agents]
-rows = [["state_icon", "machine", "workspace", "tab"], ["agent"], [{ token = "$hp_state", rules = [{ starts_with = "needs you", fg = "#f38ba8", bold = true }, { starts_with = "review", fg = "#f9e2af" }] }], [{ token = "$hp_activity", dim = true }]]
+{{ . }}
+{{- end }}
+{{- with $spaces }}
 
-[ui.sidebar.spaces]
-rows = [["state_icon", "workspace"], ["branch", "git_status"], [{ token = "$hp" }]]
+{{ . }}
 {{- end }}

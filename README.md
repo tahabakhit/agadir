@@ -114,8 +114,10 @@ Pi does not install packages that settings declare, so `chezmoi apply` runs
 When Herdr is installed, `chezmoi apply` also installs the
 [herdr-projects](https://github.com/eliasstravik/herdr-projects) plugin if it is
 missing and runs its `configure`, which adds its progress hooks to Claude Code
-and Codex. Once the plugin is present, Herdr's `config.toml` gets its sidebar
-rows, the `prefix+y` popup key and the tab-bar entry.
+and Codex. `configure` also writes its sidebar rows, the `prefix+y` popup key
+and a tab-bar entry into Herdr's `config.toml`. chezmoi owns the rest of that
+file and keeps those entries as the plugin wrote them, so plugin updates cause
+no drift.
 
 ## Tests
 
