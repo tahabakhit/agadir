@@ -40,7 +40,8 @@ config.colors = {
   selection_fg = '#ffffff',
 }
 
-config.window_decorations = 'RESIZE'
+-- Windows draws minimize/maximize/close only as integrated buttons, which live in the tab bar.
+config.window_decorations = is_windows and 'INTEGRATED_BUTTONS|RESIZE' or 'RESIZE'
 config.window_background_opacity = 0.94
 if is_mac then
   config.macos_window_background_blur = 24
@@ -51,7 +52,7 @@ config.initial_rows = 38
 config.adjust_window_size_when_changing_font_size = false
 
 config.use_fancy_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = not is_windows
 config.scrollback_lines = 10000
 config.audible_bell = 'Disabled'
 config.notification_handling = 'SuppressFromFocusedWindow'
@@ -59,6 +60,11 @@ config.notification_handling = 'SuppressFromFocusedWindow'
 -- Left Option acts as Alt for terminal shortcuts; Right Option still composes characters.
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = true
+
+if is_windows then
+  -- Herdr's Windows client garbles pastes that arrive as win32-input-mode key records.
+  config.allow_win32_input_mode = false
+end
 
 -- Outer-terminal controls use Command (macOS) or Ctrl+Shift (elsewhere); Ctrl-b belongs to Herdr.
 local mod = is_mac and 'CMD|SHIFT' or 'CTRL|SHIFT'
@@ -74,7 +80,9 @@ config.keys = {
   { key = 'l', mods = mod, action = act.ShowLauncher },
   { key = 's', mods = mod, action = act.SpawnCommandInNewWindow { args = login_shell } },
 }
-if not is_windows then
+if is_windows then
+  table.insert(config.keys, { key = 'v', mods = 'CTRL', action = act.PasteFrom 'Clipboard' })
+else
   table.insert(config.keys, { key = 'n', mods = mod, action = act.SpawnCommandInNewWindow { args = { start_herdr } } })
 end
 

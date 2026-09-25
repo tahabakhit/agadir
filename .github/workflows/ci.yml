@@ -67,4 +67,6 @@ jobs:
           if (-not $wezterm) { $wezterm = 'C:\Program Files\WezTerm\wezterm.exe' }
           $keys = & $wezterm --config-file (Join-Path $dest '.config\wezterm\wezterm.lua') show-keys 2>&1 | Out-String
           if ($LASTEXITCODE -ne 0 -or $keys -notmatch 'ShowLauncher' -or $keys -match 'ERROR') { $keys; throw 'WezTerm could not load the config' }
+          # Plain Ctrl+V (lowercase v) is bound only by the Windows branch of wezterm.lua.
+          if ($keys -cnotmatch '(?m)^\s*CTRL\s+v\s+->\s+PasteFrom') { $keys; throw 'The Windows-only WezTerm settings did not apply' }
           'WezTerm loaded the config'
