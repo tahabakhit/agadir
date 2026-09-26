@@ -26,8 +26,7 @@ embeds none.
 ## Checks before committing
 
 ```sh
-npm test
-tests/render.sh
+npm run check   # npm test, then tests/render.sh
 ```
 
 `tests/chezmoi.toml` and `tests/chezmoi-local.toml` hold sample answers for the

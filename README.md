@@ -21,7 +21,7 @@ Third-party Pi packages are listed in `home/.chezmoidata/pi.toml` and
 | Path | What it is |
 |---|---|
 | `home/` | The chezmoi source, selected by `.chezmoiroot` |
-| `home/.chezmoidata/pi.toml` | Pi packages and portable skills every machine gets |
+| `home/.chezmoidata/pi.toml` | Pi packages every machine gets and the portable skills repository |
 | `home/dot_pi/private_agent/exact_agents/` | Subagent roles |
 | `tools/merge-config.ts` | Merges owned keys into config files that their apps also write |
 | `tests/` | Sample answers and `render.sh`, which renders every target into temporary homes |
@@ -116,6 +116,7 @@ no drift.
 ## Tests
 
 ```sh
+npm run check     # both of the following
 npm test          # merge-config
 tests/render.sh   # render every target with and without local checkouts
 ```

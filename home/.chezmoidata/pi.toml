@@ -13,8 +13,8 @@ piSkillExclusions = [
   "!**/last30days/**",
 ]
 
-# Agent Skills shared by Pi, Codex (~/.agents/skills) and Claude Code (~/.claude/skills).
-portableSkills = ["github-workflows", "herdr", "macos-system-administration"]
+# Repository of the Agent Skills linked for Pi, Codex (~/.agents/skills) and
+# Claude Code (~/.claude/skills); each linked skill has a symlink_ template.
 agentSkillsRepo = "https://github.com/tahabakhit/agent-skills.git"
 
 # Pi packages from this setup's own repositories. When agentsRoot is set, each

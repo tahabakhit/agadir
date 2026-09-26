@@ -6,6 +6,7 @@
   "description": "chezmoi dotfiles for zsh, git, Herdr, WezTerm, Claude Code, Codex and Pi, plus the Pi packages and skills they install.",
   "license": "MIT",
   "scripts": {
-    "test": "node --test $(git ls-files '*.test.ts')"
+    "test": "node --test $(git ls-files '*.test.ts')",
+    "check": "npm test && tests/render.sh"
   }
 }
