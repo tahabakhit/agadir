@@ -69,3 +69,16 @@ test("json upsert matches packages by source and keeps user additions", () => {
 	);
 	assert.deepEqual(out.packages, ["npm:mine", "npm:a", { source: "/repo", skills: ["pi/skills/*"] }, "npm:b"]);
 });
+
+test("json remove drops items by identity and leaves the rest", () => {
+	const input = JSON.stringify({ packages: ["npm:mine", "git:github.com/o/a", { source: "/local/b", skills: [] }] });
+	const out = JSON.parse(
+		mergeJson(input, [{ op: "remove", path: ["packages"], value: ["git:github.com/o/a", "/local/b", "npm:absent"] }]),
+	);
+	assert.deepEqual(out.packages, ["npm:mine"]);
+});
+
+test("json remove is a no-op on a missing key and keeps the input bytes", () => {
+	const input = '{"keep": 1}';
+	assert.equal(mergeJson(input, [{ op: "remove", path: ["packages"], value: ["x"] }]), input);
+});

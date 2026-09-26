@@ -1,0 +1,25 @@
+{{- if and (ne .chezmoi.os "windows") .privateSkillsDir -}}
+{{- $dir := .privateSkillsDir -}}
+{{- $sums := "" -}}
+{{- range glob (joinPath $dir "*" "**") -}}
+{{-   if not (stat .).isDir }}{{ $sums = print $sums . (include . | sha256sum) }}{{ end -}}
+{{- end -}}
+#!/bin/sh
+# Copy each skill folder from the private skills directory into ~/.agents/skills.
+# Copies, not links, so agents never load the editable source directly.
+# chezmoi reruns this when a skill file changes: {{ $sums | sha256sum }}
+set -eu
+src={{ $dir | quote }}
+dest="$HOME/.agents/skills"
+mkdir -p "$dest"
+for skill in "$src"/*/; do
+	[ -f "$skill/SKILL.md" ] || continue
+	name=$(basename "$skill")
+	if [ -L "$dest/$name" ]; then
+		echo "dotfiles: $dest/$name is a link; leaving it" >&2
+		continue
+	fi
+	rsync -a --delete "$skill" "$dest/$name/"
+	echo "dotfiles: copied skill $name"
+done
+{{ end -}}

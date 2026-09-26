@@ -1,1 +1,1 @@
-{{ joinPath .chezmoi.workingTree "skills" "github-workflows" }}
+{{ joinPath (includeTemplate "skills-root" .) "github-workflows" }}

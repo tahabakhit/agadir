@@ -16,19 +16,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "26"
-      - uses: actions/setup-go@v5
-        with:
-          go-version: stable
       - run: brew install chezmoi
       - run: npm test
-      - run: test -z "$(gofmt -l skills)" && go vet ./skills/github-workflows/scripts/git_hygiene_audit.go
       - name: Render every chezmoi target with sample answers
-        run: |
-          tmp=$(mktemp -d)
-          cz() { HOME=$tmp chezmoi --source "$PWD" --destination "$tmp" --config tests/chezmoi.toml --persistent-state "$tmp/state.boltdb" "$@"; }
-          cz apply --exclude=scripts --verbose
-          test -z "$(cz status --exclude=scripts)"
-          test -f "$tmp/.pi/agent/settings.json" && test -f "$tmp/.claude/settings.json" && test -f "$tmp/.gitconfig"
+        run: tests/render.sh
       - name: Secret scan
         run: |
           brew install gitleaks

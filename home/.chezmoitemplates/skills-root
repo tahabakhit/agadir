@@ -1,0 +1,2 @@
+{{- /* Folder holding the portable skills: the local checkout, or the clone made by .chezmoiexternal. */ -}}
+{{- if .agentsRoot }}{{ joinPath .agentsRoot "skills" }}{{ else }}{{ joinPath .chezmoi.homeDir ".local/share/agent-skills" }}{{ end -}}

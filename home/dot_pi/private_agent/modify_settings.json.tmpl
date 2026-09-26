@@ -1,8 +1,18 @@
-{{- /* Adds and updates agadir's packages and skill exclusions; entries you add yourself stay. */ -}}
+{{- /* Declares this setup's Pi packages and skill exclusions; entries you add yourself stay. */ -}}
+{{- /* With agentsRoot, own packages load from local checkouts and their git or npm entries are removed, so Pi never loads one twice. */ -}}
 {{- $providers := includeTemplate "pi-providers.json" . | fromJson -}}
-{{- $self := dict "source" .chezmoi.workingTree "skills" (list "pi/skills/*") -}}
+{{- $own := list -}}{{- $alternates := list -}}
+{{- range .ownPiPackages -}}
+{{-   if $.agentsRoot -}}
+{{-     $own = append $own (joinPath $.agentsRoot .local) -}}
+{{-     $alternates = append $alternates .source -}}
+{{-   else -}}
+{{-     $own = append $own .source -}}
+{{-   end -}}
+{{- end -}}
 {{- $ops := list
-  (dict "op" "upsert" "path" (list "packages") "value" (concat .piPackages $providers (list $self)))
+  (dict "op" "remove" "path" (list "packages") "value" $alternates)
+  (dict "op" "upsert" "path" (list "packages") "value" (concat .piPackages $providers $own))
   (dict "op" "union" "path" (list "skills") "value" .piSkillExclusions)
 -}}
 {{- template "merge-config" (dict "format" "json" "spec" $ops "root" .chezmoi.workingTree) -}}

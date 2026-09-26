@@ -11,5 +11,5 @@ alias sizeof='du -sh'
 alias rgs="rg --hidden --glob '!.git' --smart-case --fixed-strings --line-number"
 alias rgf="rg --files-with-matches --hidden --glob '!.git' --smart-case --fixed-strings"
 
-# Pi starts in learn mode; see the learn extension in agadir.
+# Pi starts in learn mode; needs the pi-learn package.
 pi-learn() { command pi --learn=true "$@"; }

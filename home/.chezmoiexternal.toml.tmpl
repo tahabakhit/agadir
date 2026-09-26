@@ -1,0 +1,7 @@
+{{- /* Without local checkouts, the portable skills come from their repository. */ -}}
+{{- if and (ne .chezmoi.os "windows") (not .agentsRoot) }}
+[".local/share/agent-skills"]
+    type = "git-repo"
+    url = {{ .agentSkillsRepo | quote }}
+    refreshPeriod = "168h"
+{{- end }}

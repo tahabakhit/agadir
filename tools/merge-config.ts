@@ -8,12 +8,13 @@
 //   node merge-config.ts json <base64 spec>
 //   node merge-config.ts toml <base64 spec>
 //
-// JSON spec: [{ "op": "set" | "union" | "upsert" | "unset", "path": ["a", "b"], "value": ... }]
+// JSON spec: [{ "op": "set" | "union" | "upsert" | "remove" | "unset", "path": ["a", "b"], "value": ... }]
 //   set    replaces the value at path, creating parent objects.
 //   union  appends array items that are missing (deep equality), keeping existing ones.
 //   upsert like union, but items are matched by identity: a string is its own
 //          identity and an object is identified by its "source" key. A matching
 //          item is replaced in place, so a changed package filter updates the entry.
+//   remove removes array items whose identity matches an item in value.
 //   unset  removes the key at path.
 // TOML spec: { "key": "string" | number | boolean } for top-level scalar keys only.
 
@@ -23,7 +24,7 @@ import { isDeepStrictEqual } from "node:util";
 type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 export type JsonOp =
 	| { op: "set"; path: string[]; value: Json }
-	| { op: "union" | "upsert"; path: string[]; value: Json[] }
+	| { op: "union" | "upsert" | "remove"; path: string[]; value: Json[] }
 	| { op: "unset"; path: string[] };
 export type TomlSpec = Record<string, string | number | boolean>;
 
@@ -59,6 +60,14 @@ export function mergeJson(text: string, ops: JsonOp[]): string {
 		if (op.op === "unset") {
 			const parent = parentOf(merged, op.path, false);
 			if (parent) delete parent[key];
+			continue;
+		}
+		if (op.op === "remove") {
+			const parent = parentOf(merged, op.path, false);
+			if (parent && Array.isArray(parent[key])) {
+				const drop = new Set(op.value.map(identity));
+				parent[key] = (parent[key] as Json[]).filter((have) => !drop.has(identity(have)));
+			}
 			continue;
 		}
 		const parent = parentOf(merged, op.path, true)!;

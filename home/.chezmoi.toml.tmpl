@@ -1,6 +1,7 @@
 {{- /* Answers are stored in ~/.config/chezmoi/chezmoi.toml and asked only once. */ -}}
 {{- $name := "" -}}{{- $email := "" -}}{{- $signingKey := "" -}}{{- $signingProgram := "" -}}
 {{- $vertexProject := "" -}}{{- $vertexLocation := "" -}}{{- $weztermHerdr := false -}}
+{{- $agentsRoot := "" -}}{{- $privateSkillsDir := "" -}}
 {{- /* Windows gets only the WezTerm config, so it needs no answers. */ -}}
 {{- if ne .chezmoi.os "windows" -}}
 {{-   $name = promptStringOnce . "name" "Your name (git user.name)" -}}
@@ -12,6 +13,8 @@
 {{-     $vertexLocation = promptStringOnce . "vertexLocation" "Vertex AI location (e.g. eu, us, europe-west1)" "eu" -}}
 {{-   end -}}
 {{-   $weztermHerdr = promptBoolOnce . "weztermStartsHerdr" "Should WezTerm open Herdr in every new window" false -}}
+{{-   $agentsRoot = promptStringOnce . "agentsRoot" "Absolute path of the folder with local checkouts of the agent packages and skills (empty to install them from GitHub and npm)" "" -}}
+{{-   $privateSkillsDir = promptStringOnce . "privateSkillsDir" "Absolute path of a folder of private skills to copy into ~/.agents/skills (empty for none)" "" -}}
 {{- end -}}
 
 sourceDir = {{ .chezmoi.workingTree | quote }}
@@ -24,3 +27,5 @@ gitSigningProgram = {{ $signingProgram | quote }}
 vertexProject = {{ $vertexProject | quote }}
 vertexLocation = {{ $vertexLocation | quote }}
 weztermStartsHerdr = {{ $weztermHerdr }}
+agentsRoot = {{ $agentsRoot | quote }}
+privateSkillsDir = {{ $privateSkillsDir | quote }}
