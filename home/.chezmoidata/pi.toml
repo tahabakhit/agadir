@@ -7,9 +7,11 @@ piPackages = [
 ]
 piVertexPackage = "git:github.com/mandre/pi-anthropic-vertex@bump-pi"
 
-# Skills installed by other tools that Pi should not load twice or at all.
+# Skills Pi should not load: installed twice by other tools, or covered by a
+# Pi-native feature (pi-toolkit's /independent mode replaces the independent skill).
 piSkillExclusions = [
   "!**/.agents/skills/tsk-cli/**",
+  "!**/.agents/skills/independent/**",
   "!**/last30days/**",
 ]
 

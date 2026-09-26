@@ -32,6 +32,8 @@ echo "ok: remote packages"
 
 home=$(render tests/chezmoi-local.toml "[$third,\"/opt/agents/pi/learn\",\"/opt/agents/pi/toolkit\",\"/opt/agents/pi/research-kit\"]")
 [ "$(readlink "$home/.claude/skills/herdr")" = "/opt/agents/skills/herdr" ] || fail "skill link with agentsRoot"
+[ "$(readlink "$home/.agents/skills/independent")" = "/opt/agents/skills/independent" ] || fail "independent skill link"
+grep -q '"!\*\*/.agents/skills/independent/\*\*"' "$home/.pi/agent/settings.json" || fail "Pi excludes the independent skill"
 grep -q '^extensions: /opt/agents/pi/research-kit,' "$home/.pi/agent/agents/researcher.md" || fail "researcher role source"
 echo "ok: local packages"
 
