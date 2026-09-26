@@ -1,4 +1,4 @@
-# Sample answers for the chezmoi prompts, used by CI and local checks.
+# Sample answers for a machine with local checkouts, used by CI and local checks.
 [data]
 name = "Example Person"
 email = "person@example.com"
@@ -7,5 +7,5 @@ gitSigningProgram = ""
 vertexProject = "example-project"
 vertexLocation = "eu"
 weztermStartsHerdr = true
-agentsRoot = ""
+agentsRoot = "/opt/agents"
 privateSkillsDir = ""

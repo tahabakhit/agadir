@@ -1,9 +1,0 @@
-{"type":"session","version":3,"id":"aaaa1111-0000-0000-0000-000000000001","timestamp":"2026-01-10T12:00:00.000Z","cwd":"/work/proj-a"}
-{"type":"model_change","id":"m1","parentId":null,"timestamp":"2026-01-10T12:00:00.100Z","provider":"anthropic","modelId":"claude-x"}
-{"type":"session_info","id":"i1","parentId":"m1","timestamp":"2026-01-10T12:00:00.200Z","name":"Fix login"}
-{"type":"message","id":"u1","parentId":"i1","timestamp":"2026-01-10T12:00:01.000Z","message":{"role":"user","content":[{"type":"text","text":"Please fix the login bug"}],"timestamp":1768046401000}}
-{"type":"message","id":"a1","parentId":"u1","timestamp":"2026-01-10T12:00:05.000Z","message":{"role":"assistant","content":[{"type":"thinking","thinking":"Consider the token refresh"},{"type":"text","text":"Looking at auth.ts"},{"type":"toolCall","id":"c1","name":"bash","arguments":{"command":"ls","timeout":10}}],"provider":"anthropic","model":"claude-x","usage":{"input":100,"output":10,"cacheRead":1000,"cacheWrite":0,"totalTokens":1110,"cost":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"total":0.50}},"stopReason":"toolUse","timestamp":1768046405000}}
-{not json
-{"type":"message","id":"t1","parentId":"a1","timestamp":"2026-01-10T12:00:06.000Z","message":{"role":"toolResult","toolCallId":"c1","toolName":"bash","content":[{"type":"text","text":"boom"}],"isError":true,"timestamp":1768046406000}}
-{"type":"message","id":"a2","parentId":"t1","timestamp":"2026-01-10T12:00:09.000Z","message":{"role":"assistant","content":[{"type":"text","text":"Fixed the LOGIN flow.\nDone."}],"provider":"anthropic","model":"claude-x","usage":{"input":100,"output":10,"cacheRead":1000,"cacheWrite":0,"totalTokens":1110,"cost":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"total":0.25}},"stopReason":"stop","timestamp":1768046409000}}
-{"type":"message","id":"u2","parentId":"a2","timestamp":"2026-01-10T12:30:00.000Z","message":{"role":"user","content":"thanks","timestamp":1768048200000}}

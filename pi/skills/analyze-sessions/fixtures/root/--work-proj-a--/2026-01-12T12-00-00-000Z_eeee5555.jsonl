@@ -1,4 +1,0 @@
-{"type":"session","version":3,"id":"eeee5555-0000-0000-0000-000000000005","timestamp":"2026-01-12T12:00:00.000Z","cwd":"/work/proj-a"}
-{"type":"session_info","id":"i1","parentId":null,"timestamp":"2026-01-12T12:00:00.100Z","name":"om-observer-1"}
-{"type":"message","id":"u1","parentId":"i1","timestamp":"2026-01-12T12:00:01.000Z","message":{"role":"user","content":[{"type":"text","text":"observe this login thing"}],"timestamp":1768219201000}}
-{"type":"message","id":"a1","parentId":"u1","timestamp":"2026-01-12T12:00:05.000Z","message":{"role":"assistant","content":[{"type":"text","text":"observed"}],"provider":"anthropic","model":"claude-x","usage":{"input":100,"output":10,"cacheRead":1000,"cacheWrite":0,"totalTokens":1110,"cost":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"total":0.02}},"stopReason":"stop","timestamp":1768219205000}}

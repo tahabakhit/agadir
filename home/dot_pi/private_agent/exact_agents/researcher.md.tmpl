@@ -6,7 +6,7 @@ auto-exit: true
 async: true
 session-mode: lineage-only
 thinking: max
-extensions: {{ template "role-extensions" (dict "base" (list "npm:@tahabakhit/pi-research-kit") "data" .) }}
+extensions: {{ template "role-extensions" (dict "base" (list (includeTemplate "pi-own-source" (dict "source" "npm:@tahabakhit/pi-research-kit" "data" .))) "data" .) }}
 skills: none
 tools: web_search,web_fetch
 spawning: false

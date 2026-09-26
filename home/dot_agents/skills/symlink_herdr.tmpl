@@ -1,1 +1,1 @@
-{{ joinPath .chezmoi.workingTree "skills" "herdr" }}
+{{ joinPath (includeTemplate "skills-root" .) "herdr" }}

@@ -1,8 +1,7 @@
-# Pi packages every machine gets. Provider packages are added per machine:
-# the Vertex one only when a Vertex project is configured.
+# Third-party Pi packages every machine gets. Provider packages are added per
+# machine: the Vertex one only when a Vertex project is configured.
 piPackages = [
   "git:github.com/edxeth/pi-subagents",
-  "npm:@tahabakhit/pi-research-kit",
   "npm:pi-agent-ide",
   "npm:pi-blackhole",
 ]
@@ -16,3 +15,18 @@ piSkillExclusions = [
 
 # Agent Skills shared by Pi, Codex (~/.agents/skills) and Claude Code (~/.claude/skills).
 portableSkills = ["github-workflows", "herdr", "macos-system-administration"]
+agentSkillsRepo = "https://github.com/tahabakhit/agent-skills.git"
+
+# Pi packages from this setup's own repositories. When agentsRoot is set, each
+# one loads from its checkout at agentsRoot/<local> instead of its source.
+[[ownPiPackages]]
+source = "git:github.com/tahabakhit/pi-learn"
+local = "pi/learn"
+
+[[ownPiPackages]]
+source = "git:github.com/tahabakhit/pi-toolkit"
+local = "pi/toolkit"
+
+[[ownPiPackages]]
+source = "npm:@tahabakhit/pi-research-kit"
+local = "pi/research-kit"

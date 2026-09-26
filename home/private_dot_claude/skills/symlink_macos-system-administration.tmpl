@@ -1,1 +1,1 @@
-{{ joinPath .chezmoi.workingTree "skills" "macos-system-administration" }}
+{{ joinPath (includeTemplate "skills-root" .) "macos-system-administration" }}

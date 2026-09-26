@@ -1,0 +1,8 @@
+{{- /* Call with (dict "source" <package source> "data" .). Returns the local checkout path for an own package when agentsRoot is set, else the source. */ -}}
+{{- $out := .source -}}
+{{- if .data.agentsRoot -}}
+{{-   range .data.ownPiPackages -}}
+{{-     if eq .source $.source }}{{ $out = joinPath $.data.agentsRoot .local }}{{ end -}}
+{{-   end -}}
+{{- end -}}
+{{- $out -}}
